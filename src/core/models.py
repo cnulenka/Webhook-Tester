@@ -15,7 +15,7 @@ class WebHookData(models.Model):
     endpoint = ForeignKey(Endpoint, on_delete=models.CASCADE)
     generated_at = models.DateTimeField()
     received_at = models.DateTimeField(default=timezone.now)
-    payload = models.JSONField(default=None, null=True)
+    payload = models.TextField(default=None, null=True)
 
     class Meta:
         indexes = [
