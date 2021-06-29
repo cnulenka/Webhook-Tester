@@ -42,7 +42,9 @@ def post_data(request, endpoint_name):
     query_params = json.dumps(dict(request.POST))
 
     #save the webhook post data
-    WebHookData.objects.create(received_at=timezone.now(), payload=payload, headers=headers, query_params=query_params, endpoint=endpoint)
+    WebHookData.objects.create(received_at=timezone.now(), payload=payload, headers=headers,
+                                query_params=query_params, endpoint=endpoint,
+                                endpoint_hit_number=endpoint.num_hits+1)
 
     #update endpoint count
     endpoint.num_hits += 1

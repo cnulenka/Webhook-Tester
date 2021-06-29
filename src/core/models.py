@@ -19,6 +19,7 @@ class WebHookData(models.Model):
     payload = models.TextField(default=None, null=True)
     query_params = models.TextField(default=None, null=True)
     headers = models.TextField(default=None, null=True)
+    endpoint_hit_number = models.IntegerField(default=0)
 
     class Meta:
         indexes = [
@@ -26,4 +27,4 @@ class WebHookData(models.Model):
         ]
 
     def __str__(self) -> str:
-        return self.endpoint.name + str(self.web_hook_data_id)
+        return str(self.endpoint.name) + "_" + str(self.endpoint_hit_number)
