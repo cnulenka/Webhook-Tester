@@ -7,7 +7,7 @@ import uuid
 
 class Endpoint(models.Model):
     name = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    create_at = models.DateTimeField(auto_now_add=True, null=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
     num_hits = models.IntegerField(default=0)
 
     def __str__(self) -> str:
