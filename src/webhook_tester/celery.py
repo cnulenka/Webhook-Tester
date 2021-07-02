@@ -1,5 +1,10 @@
+from django.core.exceptions import MiddlewareNotUsed
 from celery import Celery
 import os
+from django.conf import settings
+from celery.schedules import crontab
+#from core.task import delete_old_webhook_endpoints
+
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webhook_tester.settings')
 
@@ -12,8 +17,14 @@ app = Celery('webhook_tester')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django app configs.
-app.autodiscover_tasks()
+app.autodiscover_tasks(lambda:settings.INSTALLED_APPS)
 
+app.conf.beat_schedule ={
+    'add-every-1-hour':{
+        'task': 'delete_old_webhook_endpoints',
+        'schedule': crontab(minute="*/1")
+    }
+}
 
 @app.task(bind=True)
 def debug_task(self):
