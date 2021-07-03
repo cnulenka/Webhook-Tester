@@ -8,32 +8,33 @@ from django.conf import settings
 from django.db.transaction import atomic, non_atomic_requests
 from django.http import HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from .serializers import WebHookDataSerializer, WebhookSerializer
+from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
 from django.core import exceptions
 
-from .models import Endpoint, WebHookData
+from .models import WebHook, WebHookData
 
 
 @csrf_exempt
 @require_POST
 def create_webhook(request):
     '''
-        create a new enpoint object, adds a
-        new row to Endpoint table.
+        create a new webhook enpoint object, adds a
+        new row to Webhook table.
     '''
-    Endpoint.objects.create()
+    WebHook.objects.create()
     return HttpResponse("Message received okay.", content_type="text/plain")
 
 @csrf_exempt
 @require_POST
-def post_data(request, endpoint_name):
+def post_webhook_data(request, webhook_endpoint_name):
     '''
-        Add data to existing webhooks
+        add/post data to existing webhooks
     '''
 
     try:
-        endpoint = Endpoint.objects.get(pk=endpoint_name)
+        webhook_endpoint = WebHook.objects.get(pk=webhook_endpoint_name)
     except exceptions.ObjectDoesNotExist:
         return HttpResponseNotFound("Endpoint id does not exits")
 
@@ -43,11 +44,39 @@ def post_data(request, endpoint_name):
 
     #save the webhook post data
     WebHookData.objects.create(received_at=timezone.now(), payload=payload, headers=headers,
-                                query_params=query_params, endpoint=endpoint,
-                                endpoint_hit_number=endpoint.num_hits+1)
+                                query_params=query_params, webhook=webhook_endpoint,
+                                webhook_hit_number=webhook_endpoint.num_hits+1)
 
     #update endpoint count
-    endpoint.num_hits += 1
-    endpoint.save()
+    webhook_endpoint.num_hits += 1
+    webhook_endpoint.save()
 
     return HttpResponse("Message received okay.", content_type="text/plain")
+
+@require_GET
+def webhook_detail_view(request, webhook_endpoint_name):
+    '''
+        returns all post data for input webhook
+        endpoint.
+    '''
+
+    try:
+        webhook_endpoint = WebHook.objects.get(pk=webhook_endpoint_name)
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponseNotFound("Endpoint id does not exits")
+    
+    webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint)
+    webhook_data_serializer = WebHookDataSerializer(webhook_data, many=True)
+    return HttpResponse(webhook_data_serializer.data, content_type="application/json", status=200)
+
+@require_GET
+def webhook_list_view(request):
+    '''
+        returns list of created webhook endpoints,
+        which are alive yet with name and hit count.
+    '''
+
+    webhook_endpoints = WebHook.objects.all()
+    webhook_endpoints_serializer = WebhookSerializer(webhook_endpoints, many=True)
+    print(webhook_endpoints_serializer.data)
+    return HttpResponse(webhook_endpoints_serializer.data, content_type="application/json", status=200)

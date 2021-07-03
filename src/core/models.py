@@ -5,7 +5,7 @@ from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
 import uuid
 
-class Endpoint(models.Model):
+class WebHook(models.Model):
     name = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     num_hits = models.IntegerField(default=0)
@@ -14,12 +14,12 @@ class Endpoint(models.Model):
         return str(self.name)
 
 class WebHookData(models.Model):
-    endpoint = ForeignKey(Endpoint, on_delete=models.CASCADE)
+    webhook = ForeignKey(WebHook, on_delete=models.CASCADE)
     received_at = models.DateTimeField(default=timezone.now)
     payload = models.TextField(default=None, null=True)
     query_params = models.TextField(default=None, null=True)
     headers = models.TextField(default=None, null=True)
-    endpoint_hit_number = models.IntegerField(default=0)
+    webhook_hit_number = models.IntegerField(default=0)
 
     class Meta:
         indexes = [
