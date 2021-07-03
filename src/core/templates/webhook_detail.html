@@ -33,7 +33,7 @@ cursor: pointer;
                 {{webhook_endpoint.name}}
                 </div>
                 <div class="col-5 textright">
-                <span class="badge badge-pill badge-warning">Expires in 8 minutes</span>
+                <span class="badge badge-pill badge-warning">Expires in {{webhook_endpoint.time_left}}</span>
                     <span id="copy" class="badge cursorpointer badge-pill badge-danger">Copy</span>
                 </div>
             </div>
@@ -48,12 +48,20 @@ cursor: pointer;
                 <h4>Query Params</h4>
                 </div>
                 <div class="col-4 textright small">
-                	<small>32 seconds ago</small>
+                    <strong>{{post_data.received_since}} ago</strong>
                 </div>
             </div>
+            {% if post_data.query_params %}
+            {% for key, value in post_data.query_params.items %}
             <div class="row ml-1">
-            Nil
+            <small>{{key}} : {{value}}</small>
             </div>
+            {% endfor %}
+            {% else %}
+            <div class="row ml-1">
+            <small>Nil</small>
+            </div>
+            {% endif %}
             <div class="row ml-1 mt-1">
             <h4>Raw Body</h4>
             </div>          
@@ -65,11 +73,11 @@ cursor: pointer;
             <div class="row ml-1 mt-1">
             <h4>Headers</h4>
             </div>
-            {% comment %} {% for header in post_data.headers %}
+            {% for key, value in post_data.headers.items %}
             <div class="row ml-1">
-            {{header}}
+            <small>{{key}} : {{value}}</small>
             </div>
-            {% endfor %} {% endcomment %}
+            {% endfor %}
             
         </div>
     </div>

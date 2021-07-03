@@ -27,4 +27,4 @@ class WebHookData(models.Model):
         ]
 
     def __str__(self) -> str:
-        return str(self.endpoint.name) + "_" + str(self.endpoint_hit_number)
+        return str(self.webhook.name) + "_" + str(self.webhook_hit_number)
