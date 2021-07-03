@@ -5,10 +5,10 @@ from .models import WebHookData, WebHook
 class WebHookDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = WebHookData
-        fields = ['payload', 'query_params', 'headers']
+        fields = ['payload', 'query_params', 'headers', 'received_at']
 
 
 class WebhookSerializer(serializers.ModelSerializer):
     class Meta:
         model = WebHook
-        fields = ['name', 'num_hits']
+        fields = ['name', 'num_hits', 'created_at']
