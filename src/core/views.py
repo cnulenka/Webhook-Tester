@@ -24,7 +24,7 @@ def create_webhook(request):
         new row to Webhook table.
     '''
     WebHook.objects.create()
-    return HttpResponse("Message received okay.", content_type="text/plain")
+    return HttpResponse("Webhook enpoint created.", status=200)
 
 @csrf_exempt
 @require_POST
@@ -51,7 +51,7 @@ def post_webhook_data(request, webhook_endpoint_name):
     webhook_endpoint.num_hits += 1
     webhook_endpoint.save()
 
-    return HttpResponse("Message received okay.", content_type="text/plain")
+    return HttpResponse("Webhook data received.", status=200)
 
 @require_GET
 def webhook_detail_view(request, webhook_endpoint_name):
@@ -67,7 +67,12 @@ def webhook_detail_view(request, webhook_endpoint_name):
     
     webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint)
     webhook_data_serializer = WebHookDataSerializer(webhook_data, many=True)
-    return HttpResponse(webhook_data_serializer.data, content_type="application/json", status=200)
+    webhook_endpoint_serializer = WebhookSerializer(webhook_endpoint)
+    context = {
+        "webhook_endpoint_data_list" : webhook_data_serializer.data,
+        "webhook_endpoint": webhook_endpoint_serializer.data
+    }
+    return render(request, "webhook_detail.html", context=context)
 
 @require_GET
 def webhook_list_view(request):
@@ -79,4 +84,8 @@ def webhook_list_view(request):
     webhook_endpoints = WebHook.objects.all()
     webhook_endpoints_serializer = WebhookSerializer(webhook_endpoints, many=True)
     print(webhook_endpoints_serializer.data)
-    return HttpResponse(webhook_endpoints_serializer.data, content_type="application/json", status=200)
+
+    context = {
+        "webhook_endpoint_list" : webhook_endpoints_serializer.data
+    }
+    return render(request, "webhook_list.html", context=context)

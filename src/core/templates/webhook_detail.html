@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<title>Page Title</title>
+<style>
+body {
+  background-color: lightgrey;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.silverbg{
+background-color: silver;
+}
+
+.textright{
+text-align: right;
+}
+
+.cursorpointer{
+cursor: pointer;
+}
+
+</style>
+</head>
+<body>
+<div class="container mt-4">
+
+<div class="row silverbg mb-4 py-1">
+    <div class="container">
+        <div class="row">
+            <div id="endpoint" class="col-7">
+                {{webhook_endpoint.name}}
+                </div>
+                <div class="col-5 textright">
+                <span class="badge badge-pill badge-warning">Expires in 8 minutes</span>
+                    <span id="copy" class="badge cursorpointer badge-pill badge-danger">Copy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% for post_data in webhook_endpoint_data_list %}
+<div class="row silverbg mb-4 py-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <h4>Query Params</h4>
+                </div>
+                <div class="col-4 textright small">
+                	<small>32 seconds ago</small>
+                </div>
+            </div>
+            <div class="row ml-1">
+            Nil
+            </div>
+            <div class="row ml-1 mt-1">
+            <h4>Raw Body</h4>
+            </div>          
+            <div class="row ml-1 mt-1">
+            <pre class="mb-0">
+{{post_data.payload}}
+                </pre>
+            </div>
+            <div class="row ml-1 mt-1">
+            <h4>Headers</h4>
+            </div>
+            {% comment %} {% for header in post_data.headers %}
+            <div class="row ml-1">
+            {{header}}
+            </div>
+            {% endfor %} {% endcomment %}
+            
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+
+document.getElementById("copy").addEventListener("click", function() {
+  const el = document.createElement('textarea');
+  el.value = document.getElementById("endpoint").textContent.trim();
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+});
+
+</script>
+
+</body>
+</html>

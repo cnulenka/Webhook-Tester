@@ -12,8 +12,8 @@ def delete_old_webhook_endpoints():
     '''
 
     try:
-        current_time = datetime.datetime.now(tz=timezone.utc)
-        webhook_endpoint_objects = WebHook.objects.filter(created_at__lte=current_time)
+        time_thresold = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=1)
+        webhook_endpoint_objects = WebHook.objects.filter(created_at__lte=time_thresold)
         webhook_endpoint_objects.delete()
     except Exception as e:
         print(e)

@@ -22,7 +22,7 @@ app.autodiscover_tasks(lambda:settings.INSTALLED_APPS)
 app.conf.beat_schedule ={
     'add-every-1-hour':{
         'task': 'delete_old_webhook_endpoints',
-        'schedule': crontab(minute=0, hour='*/1')
+        'schedule': crontab(minute='*/1')
     }
 }
 
