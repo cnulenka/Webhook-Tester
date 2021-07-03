@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import query
-from django.http.response import HttpResponseNotFound
+from django.http.response import HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render
 import copy, json, datetime
 from rest_framework import status
@@ -16,6 +16,7 @@ from django.utils import timezone
 from django.core import exceptions
 
 from .models import WebHook, WebHookData
+from .forms import WebHookDetailsQueryParamForm
 
 
 @csrf_exempt
@@ -62,14 +63,38 @@ def webhook_detail_view(request, webhook_endpoint_name):
         endpoint.
     '''
 
+    query_params = WebHookDetailsQueryParamForm(request.GET or None)
+    past_mins = None
+    last_hits = None
+
+    if len(request.GET):
+        if not query_params.is_valid():
+            return HttpResponseBadRequest("Wrong query params")
+        else:
+            past_mins = query_params.cleaned_data['past_mins']
+            last_hits = query_params.cleaned_data['last_hits']
+
     try:
         webhook_endpoint = WebHook.objects.get(pk=webhook_endpoint_name)
     except exceptions.ObjectDoesNotExist:
-        return HttpResponseNotFound("webhook does not exits")
+        return HttpResponseNotFound("Webhook does not exits.")
     
-    webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint)
-    webhook_data_serializer = WebHookDataResponseSerializer(webhook_data, many=True)
+    if past_mins == None and last_hits == None:
+        webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint).order_by('received_at')
+    elif past_mins != None and last_hits == None:
+        time_thresold = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(minutes=past_mins)
+        webhook_data = WebHookData.objects.filter(received_at__gte=time_thresold)
+    elif past_mins == None and last_hits != None:
+        webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint)
+        if len(webhook_data) > last_hits:
+            webhook_data = webhook_data[:last_hits]
+    elif past_mins != None and last_hits != None:
+        time_thresold = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(minutes=past_mins)
+        webhook_data = WebHookData.objects.filter(received_at__gte=time_thresold)
+        if len(webhook_data) > last_hits:
+            webhook_data = webhook_data[:last_hits]
 
+    webhook_data_serializer = WebHookDataResponseSerializer(webhook_data, many=True)
     webhook_endpoint_serializer = WebhookResponseSerializer(webhook_endpoint)
     context = {
         "webhook_endpoint_data_list" : webhook_data_serializer.data,

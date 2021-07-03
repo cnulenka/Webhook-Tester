@@ -23,7 +23,7 @@ class WebHookData(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=["received_at"]),
+            models.Index(fields=["-received_at"]),
         ]
 
     def __str__(self) -> str:
