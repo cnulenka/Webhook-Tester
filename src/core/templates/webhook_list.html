@@ -29,7 +29,7 @@ body {
         <div class="row justify-content-center mb-3">
         <div class="container">
         <div class="row justify-content-center">
-            <a target="_blank" style="color:#000000; text-decoration:none" href="https://{{ request.META.HTTP_HOST }}/web-hook/get-details/{{endpoint.name}}">{{ endpoint.name }} ({{endpoint.num_hits}})</a>
+            <a target="_blank" style="color:#000000; text-decoration:none" href={{request.scheme}}://{{ request.META.HTTP_HOST }}/web-hook/get-details/{{endpoint.name}}>{{ endpoint.name }} ({{endpoint.num_hits}})</a>
             </div>
             <div class="row justify-content-center">
             <span class="badge badge-pill badge-warning">Expires in {{endpoint.time_left}}</span>

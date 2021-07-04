@@ -30,7 +30,7 @@ cursor: pointer;
     <div class="container">
         <div class="row">
             <div id="endpoint" class="col-7">
-                https://{{ request.META.HTTP_HOST }}/post-data/webhook/{{webhook_endpoint.name}}
+                {{request.scheme}}://{{ request.META.HTTP_HOST }}/post-data/webhook/{{webhook_endpoint.name}}
                 </div>
                 <div class="col-5 textright">
                 <span class="badge badge-pill badge-warning">Expires in {{webhook_endpoint.time_left}}</span>
