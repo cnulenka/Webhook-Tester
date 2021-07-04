@@ -88,5 +88,5 @@ All tests are kept in that file and should be maintained as updates are made to 
 
 ### Getting Started
 
-* Base URL: This Web App is at hosted in at [Webhook-Tester](http://4eb84d4511fe.ngrok.io/web-hook/get-list/). 
+* Base URL: This Web App is at hosted in at [Webhook-Tester](http://4eb84d4511fe.ngrok.io/). 
 * The Web App can be run locally at `http://127.0.0.1:8000/`
