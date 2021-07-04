@@ -22,7 +22,7 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 app.conf.beat_schedule = {
-    "add-every-1-hour": {
+    "delete-every-1-hour": {
         "task": "delete_old_webhook_endpoints",
         "schedule": crontab(minute="*/1"),
     }
