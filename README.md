@@ -10,7 +10,10 @@ Web App Supports
 1. Creating short-lived webhook unique endpoints.
 2. Inspecting the data posted to these webhooks.
 
+### Getting Started
 
+* Base URL: This Web App is at hosted in at [Webhook-Tester](http://4eb84d4511fe.ngrok.io/). 
+* The Web App can be run locally at `http://127.0.0.1:8000/`. To run locally follow below steps.
 
 #### Database Setup
 Web App uses Sqlite DB that comes by default with Django, so no need for any extra setup.
@@ -70,7 +73,7 @@ celery -A webhook_tester worker --beat -l info --scheduler django_celery_beat.sc
 
 ![home_page](https://github.com/cnulenka/Webhook-Tester/blob/main/images/home_page.png)
 
-## End Point Detail Page
+## End Point Details Page
 
 1. At the top it shows the endpoint url that can be used to post data to the webhook, it also displays the time left to expire.
 2. There is a button at the top to copy the web hook URL.
@@ -80,15 +83,13 @@ celery -A webhook_tester worker --beat -l info --scheduler django_celery_beat.sc
 
 4. Use below query params with the details page to get more filtered information.
     * past_mins=10, gives the info about all post calls made in past 10 mins
-    * last_hits=5, gives the info about the recent 5 post calls.
 
 ![details_page](https://github.com/cnulenka/Webhook-Tester/blob/main/images/details_past_mins.png)
+   
+   * last_hits=5, gives the info about the recent 5 post calls.
 
 ![details_page](https://github.com/cnulenka/Webhook-Tester/blob/main/images/details_last_hits.png)
 
+   * both queries can be used together also.
+
 ![details_page](https://github.com/cnulenka/Webhook-Tester/blob/main/images/details_past_mins_and_last_hits.png)
-
-### Getting Started
-
-* Base URL: This Web App is at hosted in at [Webhook-Tester](http://4eb84d4511fe.ngrok.io/). 
-* The Web App can be run locally at `http://127.0.0.1:8000/`
