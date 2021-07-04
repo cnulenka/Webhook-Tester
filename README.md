@@ -28,7 +28,7 @@ Major requirements are Django, Celery, Redis
 
 #### Running the server
 
-Below setup is for linux machine. Run below command from project home/src, make sure you have virtual env set up done and you have installed all dependencies using above command.
+Below setup is for linux machine. Run below command from src folder, make sure you have virtual env set up done and you have installed all dependencies using above command.
 
 To run the Django server, execute:
 
@@ -36,40 +36,31 @@ To run the Django server, execute:
 python manage.py runserver
 ```
 
-The application runs on `http://127.0.0.1:5000/` by default.
+The application runs on `http://127.0.0.1:8000/` by default.
 
 Along with the application server we need to run celery, celery beat and Redis. Run each of below commands in a new terminal.
 
-Run Redis in a terminal. Then make sure to update redis connection(host & port) settings in src/webhook_tester/settings.py file.
+Install redis in linux following the guide [here](https://redis.io/topics/quickstart).
+Run Redis in a terminal. Then make sure to update redis connection(host & port) settings in src/webhook_tester/settings.py file. By default Redis runs at 127.0.0.1:6379.
+Project has the default settings in place.
 
 ```
 redis-server
 ```
 
 
-Run celery worker in a terminal from project home/src.
+Run celery worker in a terminal from src folder.
 
 ```
 celery -A webhook_tester worker -l info
 ```
 
 
-Run celery beat in a terminal from project home/src.
+Run celery beat in a terminal from src folder.
 
 ```
-celery -A webhook_tester worker beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+celery -A webhook_tester worker --beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 ```
-
-
-## Testing
-To run the tests, run below command from project home/src/core
-
-```
-python tests.py
-```
-
-All tests are kept in that file and should be maintained as updates are made to app functionality.
-
 
 ## Home Page
 
