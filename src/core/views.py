@@ -80,12 +80,12 @@ def webhook_detail_view(request, webhook_endpoint_name):
         return HttpResponseNotFound("Webhook does not exits.")
     
     if past_mins == None and last_hits == None:
-        webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint).order_by('received_at')
+        webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint).order_by('-received_at')
     elif past_mins != None and last_hits == None:
         time_thresold = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(minutes=past_mins)
         webhook_data = WebHookData.objects.filter(received_at__gte=time_thresold)
     elif past_mins == None and last_hits != None:
-        webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint)
+        webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint).order_by('-received_at')
         if len(webhook_data) > last_hits:
             webhook_data = webhook_data[:last_hits]
     elif past_mins != None and last_hits != None:
