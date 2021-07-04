@@ -1,17 +1,20 @@
+import uuid
+
 from django.db import models
 from django.db.models import query
 from django.db.models.base import Model
 from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
-import uuid
+
 
 class WebHook(models.Model):
-    name = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    name = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     num_hits = models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return str(self.name)
+
 
 class WebHookData(models.Model):
     webhook = ForeignKey(WebHook, on_delete=models.CASCADE)

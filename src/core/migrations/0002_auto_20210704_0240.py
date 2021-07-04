@@ -6,16 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveIndex(
-            model_name='webhookdata',
-            name='core_webhoo_receive_672f94_idx',
+            model_name="webhookdata",
+            name="core_webhoo_receive_672f94_idx",
         ),
         migrations.AddIndex(
-            model_name='webhookdata',
-            index=models.Index(fields=['-received_at'], name='core_webhoo_receive_06c7b1_idx'),
+            model_name="webhookdata",
+            index=models.Index(
+                fields=["-received_at"], name="core_webhoo_receive_06c7b1_idx"
+            ),
         ),
     ]
