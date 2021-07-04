@@ -9,7 +9,6 @@ click==7.1.2
 click-didyoumean==0.0.3
 click-plugins==1.1.1
 click-repl==0.2.0
-dataclasses==0.8
 Django==3.2.4
 django-celery-beat==2.2.1
 django-restframework==0.0.1
