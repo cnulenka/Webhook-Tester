@@ -21,6 +21,11 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
+'''
+    Schedule task to delete webhooks.
+    This task runs every min and checks for webhooks
+    created with in the past hour and deletes them from db.
+'''
 app.conf.beat_schedule = {
     "delete-every-1-hour": {
         "task": "delete_old_webhook_endpoints",

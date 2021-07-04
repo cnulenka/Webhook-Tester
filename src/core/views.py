@@ -36,9 +36,10 @@ def create_webhook(request):
 @require_POST
 def post_webhook_data(request, webhook_endpoint_name):
     """
-    add/post data to existing webhooks
+    add/post data to existing webhooks. Add a new row
+    to WebHookData table.
     """
-
+    #check invalid endpoint name
     try:
         webhook_endpoint = WebHook.objects.get(pk=webhook_endpoint_name)
     except exceptions.ObjectDoesNotExist:
@@ -68,14 +69,16 @@ def post_webhook_data(request, webhook_endpoint_name):
 @require_GET
 def webhook_detail_view(request, webhook_endpoint_name):
     """
-    returns all post data for input webhook
-    endpoint.
+    returns all posted data for input webhook endpoint
+    from recent to oldest. Based on the query params
+    filter the data if provided.
     """
 
     query_params = WebHookDetailsQueryParamForm(request.GET or None)
     past_mins = None
     last_hits = None
 
+    #retrive query params if exists
     if len(request.GET):
         if not query_params.is_valid():
             return HttpResponseBadRequest("Wrong query params")
@@ -83,11 +86,13 @@ def webhook_detail_view(request, webhook_endpoint_name):
             past_mins = query_params.cleaned_data["past_mins"]
             last_hits = query_params.cleaned_data["last_hits"]
 
+    #check invalid endpoint name
     try:
         webhook_endpoint = WebHook.objects.get(pk=webhook_endpoint_name)
     except exceptions.ObjectDoesNotExist:
         return HttpResponseNotFound("Webhook does not exits.")
-
+    
+    #based on query params return details
     if past_mins == None and last_hits == None:
         webhook_data = WebHookData.objects.filter(webhook=webhook_endpoint).order_by(
             "-received_at"
