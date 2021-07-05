@@ -32,7 +32,7 @@ body {
             <a target="_blank" style="color:#000000; text-decoration:none" href={{request.scheme}}://{{ request.META.HTTP_HOST }}/get-details/{{endpoint.name}}>{{ endpoint.name }} ({{endpoint.num_hits}})</a>
             </div>
             <div class="row justify-content-center">
-            <span class="badge badge-pill badge-warning">Expires in {{endpoint.time_left}}</span>
+            <span class="badge badge-pill badge-warning">{{endpoint.time_left}}</span>
             </div>
             </div>
         </div>

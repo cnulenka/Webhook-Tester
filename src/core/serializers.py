@@ -13,6 +13,7 @@ class WebHookDataResponseSerializer(serializers.ModelSerializer):
         model = WebHookData
         fields = ["payload"]
 
+    #manipulate/add the other attributes before sending response
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         received_since = datetime.datetime.now(tz=timezone.utc) - instance.received_at
@@ -33,6 +34,7 @@ class WebhookResponseSerializer(serializers.ModelSerializer):
         model = WebHook
         fields = ["name", "num_hits"]
 
+    #manipulate/add the other attributes before sending response
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         created_at_plus_one_hour = instance.created_at + datetime.timedelta(hours=1)
@@ -40,7 +42,10 @@ class WebhookResponseSerializer(serializers.ModelSerializer):
         time_left_seconds = round(time_left.total_seconds())
         time_left_mins = round(time_left_seconds / 60)
         if time_left_seconds <= 60:
-            representation["time_left"] = str(time_left_seconds) + " secs"
+            if time_left_seconds < 0:
+                representation["time_left"] = "Expiring..."
+            else:
+                representation["time_left"] = "Expires in " + str(time_left_seconds) + " secs"
         else:
-            representation["time_left"] = str(time_left_mins) + " mins"
+            representation["time_left"] = "Expires in " + str(time_left_mins) + " mins"
         return representation
